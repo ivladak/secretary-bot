@@ -13,6 +13,7 @@ DIGEST_DIR = "digest"
 
 def handle(msg):
     global storage
+    global bot
     content_type, chat_type, chat_id = telepot.glance(msg)
     print content_type, chat_type, chat_id
 
@@ -21,6 +22,8 @@ def handle(msg):
         classes = storage.digest(chat_id, MessageClassifier())
         filename = DIGEST_DIR + "/" + "-".join(str(datetime.utcnow()).split()) + ".html"
         write_html(classes, filename)
+        bot.sendChatAction(chat_id, 'upload_document')
+        bot.sendDocument(chat_id, open(filename, 'rb'))
     else:
         storage.store_message(msg)
 
