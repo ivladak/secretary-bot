@@ -6,14 +6,19 @@ Messages I send myself usually fall into these categories:
 - Quotes from articles I read on my phone
 - TODOs and notes to self
 - Things to check out later (movies, series, books, etc.)
+- Links to youtube/vimeo/etc. videos I want to watch later
 
 # dependencies
 - python 2.7
 - [telepot](https://github.com/nickoala/telepot)
-  - `sudo apt-get install python-pip && pip install telepot`
+  - `pip install telepot`
 - [html](https://pypi.python.org/pypi/html)
   - `pip install html`
+- [youtube-dl](https://github.com/rg3/youtube-dl) to download videos
+  - `pip install youtube_dl`
 - sqlite3
+
+If you don't have `pip`, install it first: e.g. `sudo apt-get install python-pip`.
 
 # running
 `python secretary.py <token-to-access-http-api>`
