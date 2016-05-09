@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import youtube_dl
 import threading
 import Queue
+import configuration
 
 
 class StoppableThread(threading.Thread):
@@ -95,7 +96,7 @@ class DownloaderThread(StoppableThread):
     def __init__(self, url_list):
         StoppableThread.__init__(self)
         self._url_list = url_list
-        dirpath = "~/videos/youtube"  # TODO: use config parser and take as param.
+        dirpath = configuration.get("video_download_dir")
         # youtube-dl templates are documented here:
         # https://github.com/rg3/youtube-dl/blob/master/README.md#output-template
         ydl_options = {'outtmpl': dirpath + '/%(title)s.%(ext)s'}

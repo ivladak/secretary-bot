@@ -4,6 +4,7 @@ import sys
 import time
 import telepot
 import storage
+import configuration
 from Queue import Queue
 from urlparse import urlparse
 from datetime import datetime
@@ -11,9 +12,6 @@ from video_downloader import VideoDownloader
 from secretary_exceptions import *
 from classifier import MessageClassifier
 from representations import write_html
-
-
-DIGEST_DIR = "digest"
 
 def handle(msg):
     global storage
@@ -27,7 +25,7 @@ def handle(msg):
     if content_type != 'text': return
     if msg['text'].strip().lower() == '/digest':
         classes = storage.digest(chat_id, MessageClassifier())
-        filename = DIGEST_DIR + "/" + "-".join(str(datetime.utcnow()).split()) + ".html"
+        filename = configuration.get("digest_dir") + "/" + "-".join(str(datetime.utcnow()).split()) + ".html"
         write_html(classes, filename)
         bot.sendChatAction(chat_id, 'upload_document')
         bot.sendDocument(chat_id, open(filename, 'rb'))
@@ -47,16 +45,21 @@ video_hostings = ["youtu.be", "youtube.com"]
 video_download_queue = Queue()
 video_downloader_thread = VideoDownloader(video_download_queue)
 video_downloader_thread.start()
-TOKEN = sys.argv[1]  # get token from command-line
+
+if len(sys.argv) > 1:
+    configuration.add_file(sys.argv[1])
 
 storage = storage.Storage("messages.sqlite")
-if not os.path.exists(DIGEST_DIR):
-    os.mkdir(DIGEST_DIR)
-else:
-    if not os.path.isdir(DIGEST_DIR):
-        raise DigestDirNotWritable(DIGEST_DIR)
 
-bot = telepot.Bot(TOKEN)
+digest_dir = configuration.get("digest_dir")
+if not os.path.exists(digest_dir):
+    os.mkdir(digest_dir)
+else:
+    if not os.path.isdir(digest_dir):
+        raise DigestDirNotWritable(digest_dir)
+
+token = configuration.get("token")
+bot = telepot.Bot(token)
 bot.notifyOnMessage(handle)
 
 print 'Listening ...'

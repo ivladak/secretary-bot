@@ -21,7 +21,18 @@ Messages I send myself usually fall into these categories:
 If you don't have `pip`, install it first: e.g. `sudo apt-get install python-pip`.
 
 # running
-`python secretary.py <token-to-access-http-api>`
+First, create a config file of the following form:
+```
+[bot] # Section name. Not optional.
+token = 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11 # Your token (see below) to control the bot through http api.
+digest_dir = digest # Direcotry for saving digests on the server.
+video_download_dir = ~/video/youtube
+```
+Now simply run
+
+`python secretary.py <config-file>`
+
+or even `python secretary.py` if your config file happens to be  "./bot-secretary.config" or "~/bot-secretary.config".
 
 Note, that the script is not yet demonized, so it's a good idea to keep it running inside a `screen` session.
 
