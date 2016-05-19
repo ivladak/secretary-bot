@@ -98,8 +98,12 @@ class DownloaderThread(StoppableThread):
         self._url_list = url_list
         dirpath = configuration.get("video_download_dir")
         # youtube-dl templates are documented here:
-        # https://github.com/rg3/youtube-dl/blob/master/README.md#output-template
-        ydl_options = {'outtmpl': dirpath + '/%(title)s.%(ext)s'}
+        # https://github.com/rg3/youtube-dl/blob/master/README.md#output-template.
+        # format: avoid webm videos
+        # (see https://github.com/rg3/youtube-dl/issues/165)
+        ydl_options = {'outtmpl': dirpath + '/%(title)s.%(ext)s',
+                       'format': '38/37/22/35/34/18/6/5/17/13'}
+
         self._ydl = youtube_dl.YoutubeDL(ydl_options)
 
         def _raise_hook(status):
