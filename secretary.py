@@ -41,7 +41,7 @@ def handle(msg):
     else:
         storage.store_message(msg)
 
-video_hostings = ["youtu.be", "youtube.com"]
+video_hostings = [line[:-1] for line in open("./video-hostings.config")]
 video_download_queue = Queue()
 video_downloader_thread = VideoDownloader(video_download_queue)
 video_downloader_thread.start()
