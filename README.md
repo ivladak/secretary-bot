@@ -37,3 +37,8 @@ or even `python secretary.py` if your config file happens to be  "./bot-secretar
 Note, that the script is not yet demonized, so it's a good idea to keep it running inside a `screen` session.
 
 If you don't know what the token I am talking about is, chat with [BotFather](https://telegram.me/BotFather) to create yourself a new bot.
+
+# attribution
+This repository includes these sounds from freesound:
+
+[Gong.wav](http://www.freesound.org/people/juskiddink/sounds/86773/) by [juskiddink](http://www.freesound.org/people/juskiddink/).
