@@ -17,6 +17,7 @@ Messages I send myself usually fall into these categories:
 - [youtube-dl](https://github.com/rg3/youtube-dl) to download videos
   - `pip install youtube_dl`
 - sqlite3
+- aplay (for producing the gong sound)
 
 If you don't have `pip`, install it first: e.g. `sudo apt-get install python-pip`.
 
