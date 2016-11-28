@@ -36,7 +36,7 @@ Now simply run
 
 or even `python secretary.py` if your config file happens to be  "./bot-secretary.config" or "~/bot-secretary.config".
 
-Note, that the script is not yet demonized, so it's a good idea to keep it running inside a `screen` session.
+The bot is not demonized, however there's a script (auto-restart.sh) which restarts the bot in a detached screen session if it is not running.
 
 If you don't know what the token I am talking about is, chat with [BotFather](https://telegram.me/BotFather) to create yourself a new bot.
 
