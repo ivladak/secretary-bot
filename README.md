@@ -1,12 +1,13 @@
 # secretary-bot
-[Telegram bot](https://core.telegram.org/bots/) which structures (classifies) messages sent to it and generates a digest later.
+A [telegram bot](https://core.telegram.org/bots/) which remembers everything you say and generates a digest later.
 The idea is to talk to a robotic secretary in Telegram instead of talking to yourself (which I do all the time).
-Messages I send myself usually fall into these categories:
-- Ideas
-- Quotes from articles I read on my phone
-- TODOs and notes to self
-- Things to check out later (movies, series, books, etc.)
-- Links to youtube/vimeo/etc. videos I want to watch later
+It also allows you to run simple actions on the bot's machine. (Control you machine via chat messages!)
+
+Features:
+- Saves text messages to a database. When the user sends the `/digest` command the bot replies with an html containing all the messages since the last `/digest`.
+- If you send the bot a link to a video on a video hosting site (the list of sites is configurable) it will download it (to the machine on which the bot runs). You can interrupt the downloading process (e.g. if you would like your hard drive to stop producing noise) by issuing the `/pause` command.
+- Meditation. Say `/meditate [time-in-minutes]` and the bot will ring a gong twice: at the beginning and at the end of your meditation session. Of course the machine on which the bot is running must be able to make the sound i.e. have speakers connected to it and a simple sound playing software (see below).
+- [Not implemented]: message classificataion. What I say to the bot is usually an idea or a quote or a TODO item, etc.
 
 # dependencies
 - python 2.7
