@@ -4,7 +4,8 @@ from controllable_threads import *
 import youtube_dl
 import Queue
 import configuration
-
+from converter import convert_vtt_to_srt
+                    
 class VideoDownloader(PausableThread):
     """VideoDownloader class.
 
@@ -63,7 +64,10 @@ class DownloaderThread(StoppableThread):
         # youtube-dl templates are documented here:
         # https://github.com/rg3/youtube-dl/blob/master/README.md#output-template.
         ydl_options = {'outtmpl': dirpath + '/%(title)s.%(ext)s',
-                       'format': 'mp4/flv/3gp'}
+                       'format': 'mp4/flv/3gp',
+                       'subtitleslang': ['en', 'ru'],
+                       'subtitlesformat': 'srt',
+                       'writesubtitles': True}
 
         self._ydl = youtube_dl.YoutubeDL(ydl_options)
 
@@ -74,6 +78,7 @@ class DownloaderThread(StoppableThread):
                 raise Exception("Downloader thread has been stopped.")
             # Check 
             if status['status'] == 'finished':
+                convert_vtt_to_srt(dirpath)
                 self._queue.put(self._url_list[0])
 
         self._ydl.add_progress_hook(_raise_hook)
