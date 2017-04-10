@@ -18,13 +18,14 @@ class VideoDownloader(PausableThread):
     A location in the file system to download into will be read from
     a config file (TODO: for now it is hardcoded).
     """
-    def __init__(self, download_queue):
+    def __init__(self, download_queue, finished_queue):
         PausableThread.__init__(self)
         self._queue = download_queue
         self._spawned = None
+        self._finished_queue = finished_queue
 
     def _start_download(self, url):
-        self._spawned = DownloaderThread([url])
+        self._spawned = DownloaderThread([url], self._finished_queue)
         self._spawned.start()
 
     def run(self):
@@ -35,14 +36,17 @@ class VideoDownloader(PausableThread):
                     self._spawned.join(timeout=0.3)
                     if (self._spawned.is_alive()):
                         continue
+                    else:
+                        self._spawned = None
                 try:
                     url = self._queue.get(block=True, timeout=0.3)
                     self._start_download(url)
                 except Queue.Empty:
                     pass
-            self._spawned.stop()
-            self.wait_for_resume()
 
+            if self._spawned:
+                self._spawned.stop()
+            self.wait_for_resume()
 
 class DownloaderThread(StoppableThread):
     """DownloaderThread class.
@@ -51,9 +55,10 @@ class DownloaderThread(StoppableThread):
     functionality, which can be stopped (killed) at request.
     """
 
-    def __init__(self, url_list):
+    def __init__(self, url_list, finished_queue):
         StoppableThread.__init__(self)
         self._url_list = url_list
+        self._queue = finished_queue
         dirpath = configuration.get("video_download_dir")
         # youtube-dl templates are documented here:
         # https://github.com/rg3/youtube-dl/blob/master/README.md#output-template.
@@ -67,6 +72,8 @@ class DownloaderThread(StoppableThread):
             # method. Terminate the thread via raising an exception.
             if self.stopped():
                 raise Exception("Downloader thread has been stopped.")
+            if status['status'] == 'finished':
+                self._queue.put(self._url_list[0])
 
         self._ydl.add_progress_hook(_raise_hook)
 

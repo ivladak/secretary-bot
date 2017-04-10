@@ -5,7 +5,7 @@ import time
 import telepot
 import storage
 import configuration
-from Queue import Queue
+import Queue
 from urlparse import urlparse
 from datetime import datetime
 from video_downloader import VideoDownloader
@@ -48,13 +48,16 @@ def handle(msg):
         # TODO: We want to store the url to the DB as well, because the download
         # process can be interrupted and we'll need to re-download.
         # One design is Downloader asking the Storage.
+        storage.store_url(msg)
         video_download_queue.put(msg['text'])
     else:
         storage.store_message(msg)
 
+storage = storage.Storage("messages.sqlite")
 video_hostings = [line[:-1] for line in open("./video-hostings.config")]
-video_download_queue = Queue()
-video_downloader_thread = VideoDownloader(video_download_queue)
+video_download_queue = Queue.Queue()
+video_finished_queue = Queue.Queue()
+video_downloader_thread = VideoDownloader(video_download_queue, video_finished_queue)
 video_downloader_thread.start()
 
 meditation_manager = MeditationManager()
@@ -62,7 +65,6 @@ meditation_manager = MeditationManager()
 if len(sys.argv) > 1:
     configuration.add_file(sys.argv[1])
 
-storage = storage.Storage("messages.sqlite")
 
 digest_dir = configuration.get("digest_dir")
 if not os.path.exists(digest_dir):
@@ -80,5 +82,12 @@ print 'Listening ...'
 # Keep the program running.
 while 1:
     time.sleep(10)
+    try:
+        for url in storage.get_urls():
+            video_download_queue.put(url)
+        url = video_finished_queue.get(block=False)
+        storage.mark_downloaded(url)
+    except Queue.Empty:
+        pass
 
 storage.finalize() # FIXME: unreacheable
