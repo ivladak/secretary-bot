@@ -73,7 +73,7 @@ else:
 
 token = configuration.get("token")
 bot = telepot.Bot(token)
-bot.notifyOnMessage(handle)
+bot.message_loop(handle)
 
 print 'Listening ...'
 
