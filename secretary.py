@@ -39,11 +39,11 @@ def handle(msg):
         video_downloader_thread.resume()
     elif len(words) > 0 and words[0] == "/meditate":
         try:
-          meditation_manager.meditate(*words[1:2])
+            meditation_manager.meditate(*words[1:2])
         except MeditationException as e:
-          bot.sendMessage(chat_id, str(e))
+            bot.sendMessage(chat_id, str(e))
         except Exception as e:
-          print str(e)
+            print str(e)
     elif urlparse(msg['text']).netloc.lower().replace("www.", "") in video_hostings:
         # TODO: We want to store the url to the DB as well, because the download
         # process can be interrupted and we'll need to re-download.
