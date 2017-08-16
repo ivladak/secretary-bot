@@ -53,9 +53,6 @@ def handle(msg):
         except Exception as e:
             print str(e)
     elif urlparse(msg['text']).netloc.lower().replace("www.", "") in video_hostings:
-        # TODO: We want to store the url to the DB as well, because the download
-        # process can be interrupted and we'll need to re-download.
-        # One design is Downloader asking the Storage.
         storage.store_url(msg)
         video_download_queue.put(msg['text'])
     else:
