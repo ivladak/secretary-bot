@@ -12,7 +12,8 @@ from video_downloader import VideoDownloader
 from secretary_exceptions import *
 from meditation import *
 from classifier import MessageClassifier
-from representations import write_html
+from representations import write_rest
+from representations import write_pdf
 
 def handle(msg):
     global storage
@@ -29,8 +30,15 @@ def handle(msg):
 
     if msg_lowercase == '/digest':
         classes = storage.digest(chat_id, MessageClassifier())
-        filename = configuration.get("digest_dir") + "/" + "-".join(str(datetime.utcnow()).split()) + ".html"
-        write_html(classes, filename)
+        filename = configuration.get("digest_dir") + "/" \
+          + "-".join(str(datetime.utcnow()).split()) + ".rst"
+        write_rest(classes, filename)
+        try:
+            pdfname = filename[:-4] + ".pdf"
+            write_pdf(filename, pdfname)
+            filename = pdfname
+        except:
+            pass
         bot.sendChatAction(chat_id, 'upload_document')
         bot.sendDocument(chat_id, open(filename, 'rb'))
     elif msg_lowercase == '/pause':

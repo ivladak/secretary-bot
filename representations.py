@@ -1,17 +1,41 @@
-from html import HTML
 from time import ctime
+from subprocess import call
 
-def write_html(classes, digest_filename):
+class rest_builder:
+    """A rudimentary reStructuredText builder."""
+    def __init__(self):
+        self._body = ""
+
+    def title(self, text, underline="======"):
+        self._body += "\n" + text  + "\n" + underline + "\n"
+
+    def subtitle (self, text):
+        self.title(text, "------")
+
+    def item(self, text):
+        self._body += "- " + text + "\n"
+
+    def tofile(self, filename):
+        f = open(filename, "w")
+        f.write(self._body.encode('utf-8'))
+        f.close()
+
+
+def write_rest(classes, digest_filename):
     time = ctime().split()
     del time[-2] # Don't really need the time, we want to highlight only the date.
-    h = HTML()
-    h.h1("Digest for " + " ".join(time))
+
+    rest = rest_builder()
+
+    rest.title("Digest for " + " ".join(time))
     for cls in classes:
-        h.h2(cls + ":")
-        unordered_list = h.ul
+        rest.subtitle(cls + ":")
         for item in classes[cls]:
-            unordered_list.li(item)
-    f = open(digest_filename, "w")
-    f.write('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'.encode('utf-8'))
-    f.write(h.__unicode__().encode('utf-8'))
-    f.close()
+            rest.item(item)
+
+    rest.tofile(digest_filename)
+
+
+def write_pdf(rest_fname, out_fname):
+    args = ["rst2pdf", rest_fname, "-s", "non-latin.style", "-o", out_fname]
+    call(args)

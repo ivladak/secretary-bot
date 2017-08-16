@@ -19,6 +19,7 @@ Features:
   - `pip install youtube_dl`
 - sqlite3
 - aplay (for producing the gong sound)
+- [rst2pdf](https://github.com/rst2pdf/rst2pdf) to render your digests to pdf (optional)
 
 If you don't have `pip`, install it first: e.g. `sudo apt-get install python-pip`.
 
