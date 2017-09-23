@@ -1,19 +1,25 @@
 from time import ctime
 from subprocess import call
 
+def escape(text):
+    esc = [ u"\u2014", "=", "-", "`", ":", "'", '"', "~", "^", "_", "*", "+", "#", "<", ">" ]
+    for i in esc:
+        text = text.replace(i, u"\\" + i)
+    return text
+
 class rest_builder:
     """A rudimentary reStructuredText builder."""
     def __init__(self):
-        self._body = ""
+        self._body = u""
 
     def title(self, text, underline="======"):
-        self._body += "\n" + text  + "\n" + underline + "\n"
+        self._body += "\n" + escape(text)  + "\n" + underline + "\n"
 
     def subtitle (self, text):
         self.title(text, "------")
 
     def item(self, text):
-        self._body += "- " + text + "\n"
+        self._body += "- " + escape(text.replace("\n", "\n  ")) + "\n"
 
     def tofile(self, filename):
         f = open(filename, "w")
