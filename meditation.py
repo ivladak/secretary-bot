@@ -58,7 +58,7 @@ class MeditationManager:
             raise MeditationException("Meditation time out of bounds")
         return int_time
 
-    meditation_time_default = 25
+    meditation_time_default = 30
     meditation_time_min = 1
     meditation_time_max = 60 * 24 * 31
 
