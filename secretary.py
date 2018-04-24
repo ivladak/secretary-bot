@@ -45,6 +45,8 @@ def handle(msg):
         video_downloader_thread.pause()
     elif msg_lowercase == '/resume':
         video_downloader_thread.resume()
+    elif msg_lowercase in ['/silence', '/s']:
+        subprocess.call['./silence']
     elif len(words) > 0 and words[0] == "/meditate":
         try:
             meditation_manager.meditate(*words[1:2])
