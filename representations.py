@@ -2,15 +2,15 @@ from time import ctime
 from subprocess import call
 
 def escape(text):
-    esc = [ u"\u2014", "=", "-", "`", ":", "'", '"', "~", "^", "_", "*", "+", "#", "<", ">" ]
+    esc = [ "\u2014", "=", "-", "`", ":", "'", '"', "~", "^", "_", "*", "+", "#", "<", ">" ]
     for i in esc:
-        text = text.replace(i, u"\\" + i)
+        text = text.replace(i, "\\" + i)
     return text
 
 class rest_builder:
     """A rudimentary reStructuredText builder."""
     def __init__(self):
-        self._body = u""
+        self._body = ""
 
     def title(self, text, underline="======"):
         self._body += "\n" + escape(text)  + "\n" + underline + "\n"

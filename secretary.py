@@ -5,8 +5,8 @@ import time
 import telepot
 import storage
 import configuration
-import Queue
-from urlparse import urlparse
+import queue
+from urllib.parse import urlparse
 from datetime import datetime
 from video_downloader import VideoDownloader
 from secretary_exceptions import *
@@ -22,7 +22,7 @@ def handle(msg):
     global video_download_queue
     global video_downloader_thread
     content_type, chat_type, chat_id = telepot.glance(msg)
-    print content_type, chat_type, chat_id
+    print(content_type, chat_type, chat_id)
 
     if content_type != 'text': return
     msg_lowercase = msg['text'].strip().lower()
@@ -53,7 +53,7 @@ def handle(msg):
         except MeditationException as e:
             bot.sendMessage(chat_id, str(e))
         except Exception as e:
-            print str(e)
+            print(str(e))
     elif urlparse(msg['text']).netloc.lower().replace("www.", "") in video_hostings:
         storage.store_url(msg)
         video_download_queue.put(msg['text'])
@@ -62,8 +62,8 @@ def handle(msg):
 
 storage = storage.Storage("messages.sqlite")
 video_hostings = [line[:-1] for line in open("./video-hostings.config")]
-video_download_queue = Queue.Queue()
-video_finished_queue = Queue.Queue()
+video_download_queue = queue.Queue()
+video_finished_queue = queue.Queue()
 video_downloader_thread = VideoDownloader(video_download_queue, video_finished_queue)
 video_downloader_thread.start()
 
@@ -84,7 +84,7 @@ token = configuration.get("token")
 bot = telepot.Bot(token)
 bot.message_loop(handle)
 
-print 'Listening ...'
+print('Listening ...')
 
 # Keep the program running.
 while 1:
@@ -94,7 +94,7 @@ while 1:
             video_download_queue.put(url)
         url = video_finished_queue.get(block=False)
         storage.mark_downloaded(url)
-    except Queue.Empty:
+    except queue.Empty:
         pass
 
 storage.finalize() # FIXME: unreacheable

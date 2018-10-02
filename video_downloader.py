@@ -1,8 +1,8 @@
 #!/usr/bin/python
-from __future__ import unicode_literals
+
 from controllable_threads import *
 import youtube_dl
-import Queue
+import queue
 import configuration
 from converter import convert_vtt_to_srt
 
@@ -42,7 +42,7 @@ class VideoDownloader(PausableThread):
                 try:
                     url = self._queue.get(block=True, timeout=0.3)
                     self._start_download(url)
-                except Queue.Empty:
+                except queue.Empty:
                     pass
 
             if self._spawned:
